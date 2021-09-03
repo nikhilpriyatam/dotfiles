@@ -40,6 +40,7 @@ Plug 'jpalardy/vim-slime', { 'for': 'python' }
 Plug 'hanschen/vim-ipython-cell', { 'for': 'python' }
 Plug 'itchyny/vim-cursorword'			" Underlines the word under cursor
 Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' }	" :Pydocstring, requires pip install doq
+Plug 'chrisbra/unicode.vim'			" Install plugin for identifying, searchinng and completing unicodes
 call plug#end()					" All plugin entries should be enclosed before this line.
 
 
@@ -61,6 +62,8 @@ set termguicolors				" Add this to enable true terminal color support.
 set cursorline					" Adds cursorline
 colorscheme onedark				" SETTING NECESSARY. Otherwise raises errors with plugin vim-indent-guides.
 set synmaxcol=10000				" Change vim's default behaviour where syntax highlight is limited to 3000 chars
+set splitright					" Make vsplit put the new buffer to right of the current buffer
+set splitbelow					" Make split put the new buffer below the current buffer
 
 syntax on					" Shows colored syntax in vim.
 filetype plugin on				" Detects a FileType which is used by autocomplete and other functionalities.
