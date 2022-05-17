@@ -30,17 +30,17 @@ Plug 'psf/black'				" Python code formatter, needs to be installed through pip i
 Plug 'scrooloose/nerdtree'			" Shows file explorer within Vim
 Plug 'jistr/vim-nerdtree-tabs'			" Allows us to open files in new tab from Vim.
 Plug 'vim-airline/vim-airline'			" Lean & mean status/tabline for vim that's light as air.
+Plug 'edkolev/tmuxline.vim'			" Tmux statusline
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " Autocompletion engine. Requires nodejs
+let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-tailwindcss', 'coc-pyright']
 Plug 'tpope/vim-surround'			" All about surroundings like parenthesis
 Plug 'tpope/vim-fugitive'			" Vim plugin for git
 Plug 'rafi/awesome-vim-colorschemes'		" Vim colorschemes
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'				" Fuzzy finder for vim
-Plug 'jpalardy/vim-slime', { 'for': 'python' }
-Plug 'hanschen/vim-ipython-cell', { 'for': 'python' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+let g:fzf_action = {'ctrl-t': 'tab split', 'ctrl-s': 'split', 'ctrl-v': 'vsplit'}
 Plug 'itchyny/vim-cursorword'			" Underlines the word under cursor
-Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' }	" :Pydocstring, requires pip install doq
-Plug 'chrisbra/unicode.vim'			" Install plugin for identifying, searchinng and completing unicodes
+Plug 'ryanoasis/vim-devicons'
 call plug#end()					" All plugin entries should be enclosed before this line.
 
 
@@ -49,11 +49,18 @@ call plug#end()					" All plugin entries should be enclosed before this line.
 
 set nocompatible				" Use vim not vi
 set t_Co=256					" show colors even when opened inside screen or tmux
-set guicursor=a:block-Cursor
+
+set guicursor=n-v-c:block,i-ci-ve:ver25
+augroup RestoreCursorShapeOnExit
+    autocmd!
+    autocmd VimLeave * set guicursor=a:ver25-blinkwait400-blinkoff400-blinkon400
+augroup END
+
 set termencoding=utf-8				" Set the default encoding to UTF-8.
 set backspace=indent,eol,start			" Allow backspace over everything. Otherwise backspace key won't work in vim.
 set autoread					" Reload file if changed externally.
 set number					" Shows the line numbers by default.
+set relativenumber
 set clipboard=unnamed				" Use system's clipboard (For copy and paste). Vim has a custom clipboard.
 set scrolloff=999				" Ensures that your working line is always at the center (Better readability)
 "set textwidth=200				" Default text width. 
@@ -94,12 +101,13 @@ set modifiable					" Will make a buffer modifiable. set noma does the opposite
 au FileType python setlocal tabstop=4 softtabstop=4 shiftwidth=4 textwidth=88
 \ expandtab autoindent fileformat=unix foldmethod=indent foldnestmax=2
 \ fileformat=unix completeopt-=preview colorcolumn=89 background=dark
-au FileType python colorscheme gruvbox
-au FileType python let g:gruvbox_termcolors=256
-au FileType python let g:gruvbox_contrast_dark="soft"
-au FileType python let g:pydocstring_formatter='google'
+au FileType python colorscheme onedark
 au FileType python map <leader>d :Pydocstring<CR>
 
+au FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2
+\ expandtab autoindent fileformat=unix foldmethod=indent foldnestmax=5
+\ fileformat=unix completeopt-=preview background=dark
+au FileType html colorscheme molokai
 " ============================================================================================================================
 " =================== Latex File type specific settings ======================================================================
 
@@ -119,13 +127,9 @@ au BufNewFile,BufRead *.rst setlocal tabstop=3 softtabstop=3 shiftwidth=3
 " ============================================================================================================================
 " =================== External Plugin Related Settings =======================================================================
 
-let NERDTreeIgnore=['\.pyc$', '\~$', '\.pdf$',
-\ '\.dvi$', '__pycache__']          		" Ignore specific kinds of files and directories in NERDTree
+let NERDTreeIgnore=['\.pyc$', '\~$', '\.pdf$', '\.dvi$', '__pycache__']
 " let NERDTreeQuitOnOpen = 1			" Close NERDTree when opening a new file.
 
-map :mit :0r ~/.config/nvim/mit.txt		" Shortcut for MIT License
-map :gnu :0r ~/.config/nvim/gnu.txt		" Shortcut for GNU GPL v3 License
-map :apache :0r ~/.config/nvim/apache.txt	" Shortcut for Apache License 2.0
 noremap <C-n> :NERDTreeToggle<CR>|		" Shortcut (Ctrl + n) to toggle NERDTree
 noremap <S-Up> :tabr<cr>|			" Shortcut (Shift + Up) to go to the right tab
 noremap <S-Down> :tabl<cr>|			" Shortcut (Shift + Down) to go to the left tab
@@ -139,21 +143,11 @@ inoremap <S-Right> <esc>:tabn<cr>|		" Shortcut in insert mode (Shift + Right) to
 
 
 let g:indent_guides_enable_on_vim_startup = 1	" Show the visual indentation right from Vim startup. Enabled by default.
-let g:completor_python_binary = $PYTHON3_PATH . "/bin/python" " Define miniconda python for completor.
-
-" vim-slime and vim-iython-cell settings for vim + tmux
-let g:slime_target = "tmux"
-let g:slime_paste_file = "$HOME/.slime_paste"
-let g:slime_default_config = {"socket_name": get(split($TMUX, ","), 0), "target_pane": ":.2"}
-let g:slime_dont_ask_default = 1
-let g:slime_preserve_curpos = 0
-let g:slime_cell_delimiter = "#%%"
-nmap <leader>s <Plug>SlimeSendCell
-"
+let g:airline#extensions#tmuxline#enabled = 1
+let airline#extensions#tmuxline#snapshot_file = "~/.tmux-status.conf"
 
 " ============================================================================================================================
 " =================== Internal Shortcuts which do not involve any external plugins ===========================================
-
 
 
 inoremap jk <esc>|				" Shortcut (jk) for <esc>
