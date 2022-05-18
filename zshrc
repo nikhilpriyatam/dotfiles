@@ -1,6 +1,7 @@
 # This config requires that brew be installed on the machine.
 # brew installation: https://github.com/Homebrew/brew
 
+export PATH=/home/linuxbrew/.linuxbrew/bin/:$PATH
 export VI_MODE_SET_CURSOR=true
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
